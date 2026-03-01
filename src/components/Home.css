@@ -1,0 +1,170 @@
+.home {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  height: 100%;
+}
+
+/* ── Tip of the Day ── */
+.tip-card {
+  background-color: #c4a87a;
+  border-radius: 14px;
+  padding: 18px 24px;
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+}
+
+.tip-label {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #3d5235;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  white-space: nowrap;
+  opacity: 0.7;
+}
+
+.tip-text {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.95rem;
+  color: #3d2e1a;
+  line-height: 1.5;
+}
+
+/* ── Timer Widget ── */
+.timer-widget {
+  flex: 1;
+  background-color: #a0784a;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s;
+  gap: 12px;
+  min-height: 260px;
+}
+
+.timer-widget:hover:not(.timer-widget--running) {
+  background-color: #8d6840;
+}
+
+.timer-widget--running {
+  cursor: default;
+}
+
+.timer-idle-icon {
+  font-size: 3rem;
+  line-height: 1;
+}
+
+.timer-idle-text {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #f0e8dc;
+  opacity: 0.8;
+}
+
+.timer-type-label {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #f0e8dc;
+  letter-spacing: 2px;
+  opacity: 0.7;
+  text-transform: uppercase;
+}
+
+.timer-session-info {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #f0e8dc;
+  opacity: 0.5;
+  letter-spacing: 1px;
+  margin-top: -6px;
+}
+
+.timer-display {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 5rem;
+  font-weight: 700;
+  color: #f0e8dc;
+  letter-spacing: 4px;
+  line-height: 1;
+}
+
+.timer-display--paused {
+  opacity: 0.5;
+}
+
+.timer-btn-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.timer-pause-btn {
+  background-color: rgba(240, 232, 220, 0.15);
+  border: 1.5px solid rgba(240, 232, 220, 0.5);
+  border-radius: 50%;
+  width: 42px;
+  height: 42px;
+  font-size: 1rem;
+  color: #f0e8dc;
+  cursor: pointer;
+  transition: background 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.timer-pause-btn:hover {
+  background-color: rgba(240, 232, 220, 0.35);
+}
+
+.timer-stop-btn {
+  background-color: rgba(240, 232, 220, 0.2);
+  border: 1.5px solid rgba(240, 232, 220, 0.5);
+  border-radius: 20px;
+  padding: 8px 28px;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #f0e8dc;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.timer-stop-btn:hover {
+  background-color: rgba(240, 232, 220, 0.35);
+}
+
+/* ── Link Buttons ── */
+.link-row {
+  display: flex;
+  gap: 16px;
+}
+
+.link-btn {
+  flex: 1;
+  background-color: #c4a87a;
+  border: none;
+  border-radius: 12px;
+  padding: 18px;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #3d5235;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.link-btn:hover {
+  background-color: #b99a6a;
+}

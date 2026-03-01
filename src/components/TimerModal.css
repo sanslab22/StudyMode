@@ -1,0 +1,191 @@
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(30, 20, 10, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.modal-card {
+  background-color: #3d5235;
+  border-radius: 20px;
+  padding: 36px 40px;
+  width: 380px;
+  position: relative;
+  box-shadow: 0 16px 40px rgba(0,0,0,0.35);
+}
+
+.modal-close {
+  position: absolute;
+  top: 14px;
+  right: 18px;
+  background: none;
+  border: none;
+  font-size: 1.4rem;
+  color: rgba(240, 232, 220, 0.6);
+  cursor: pointer;
+  line-height: 1;
+}
+
+.modal-close:hover {
+  color: #f0e8dc;
+}
+
+.modal-heading {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #f0e8dc;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 24px;
+  opacity: 0.85;
+}
+
+/* ── Type selection ── */
+.type-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.type-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: rgba(240, 232, 220, 0.1);
+  border: 1.5px solid rgba(240, 232, 220, 0.2);
+  border-radius: 12px;
+  padding: 14px 18px;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.type-option:hover {
+  background-color: rgba(240, 232, 220, 0.18);
+}
+
+.type-option--active {
+  background-color: #c4a87a;
+  border-color: #c4a87a;
+}
+
+.type-name {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #f0e8dc;
+  letter-spacing: 1.5px;
+}
+
+.type-plus {
+  font-size: 1.2rem;
+  color: #f0e8dc;
+  opacity: 0.7;
+}
+
+/* ── Config form ── */
+.config-grid {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 14px 20px;
+}
+
+.config-label {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #f0e8dc;
+  opacity: 0.8;
+}
+
+.config-time {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.config-input {
+  width: 64px;
+  height: 40px;
+  background-color: rgba(240, 232, 220, 0.15);
+  border: 1.5px solid rgba(240, 232, 220, 0.3);
+  border-radius: 8px;
+  text-align: center;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #f0e8dc;
+  outline: none;
+}
+
+.config-input:focus {
+  border-color: #c4a87a;
+}
+
+.config-input--short {
+  width: 64px;
+}
+
+.config-input--readonly {
+  opacity: 0.5;
+  cursor: default;
+  pointer-events: none;
+}
+
+.config-sep {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #f0e8dc;
+  opacity: 0.6;
+}
+
+.config-zeros {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #f0e8dc;
+  opacity: 0.45;
+}
+
+.config-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 28px;
+}
+
+.back-btn {
+  background: none;
+  border: none;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.85rem;
+  color: #f0e8dc;
+  opacity: 0.5;
+  cursor: pointer;
+}
+
+.back-btn:hover {
+  opacity: 0.9;
+}
+
+.start-btn {
+  background-color: #c4a87a;
+  border: none;
+  border-radius: 20px;
+  padding: 10px 36px;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #3d5235;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.start-btn:hover {
+  background-color: #b99a6a;
+}
