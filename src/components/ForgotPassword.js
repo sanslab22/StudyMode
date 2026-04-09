@@ -1,9 +1,12 @@
+'use client';
+
 import { useState, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import './ForgotPassword.css';
 
 function ForgotPassword() {
-  const navigate = useNavigate();
+  const router = useRouter();
   const [step, setStep] = useState('emailEntry');
   const [email, setEmail] = useState('');
   const [digits, setDigits] = useState(['', '', '', '', '', '']);
@@ -63,7 +66,7 @@ function ForgotPassword() {
         <div className="fp-content">
           <p className="fp-heading">Forgot Your Password ?</p>
           <p className="fp-subtext">
-            Enter your email address and we'll send you a verification code.
+            Enter your email address and we&apos;ll send you a verification code.
           </p>
 
           <form className="fp-email-form" onSubmit={handleEmailSubmit}>
@@ -87,13 +90,13 @@ function ForgotPassword() {
         </div>
 
         <div className="fp-footer">
-          <a href="/create-account" className="fp-footer-link" onClick={(e) => { e.preventDefault(); navigate('/create-account'); }}>
+          <Link href="/create-account" className="fp-footer-link">
             Create New Account
-          </a>
+          </Link>
           <span className="fp-footer-divider">|</span>
-          <a href="/" className="fp-footer-link" onClick={(e) => { e.preventDefault(); navigate('/'); }}>
+          <Link href="/" className="fp-footer-link">
             Already have an account?
-          </a>
+          </Link>
         </div>
       </div>
     );
@@ -135,7 +138,7 @@ function ForgotPassword() {
           </form>
 
           <p className="fp-help">
-            Didn't get a code?{' '}
+            Didn&apos;t get a code?{' '}
             <span className="fp-highlight fp-resend" onClick={() => console.log('Resend code')}>
               Resend
             </span>
@@ -191,7 +194,7 @@ function ForgotPassword() {
           <p className="fp-confirm-text">Your password has been reset successfully</p>
           <hr className="fp-divider" />
           <p className="fp-confirm-sub">Please click below to navigate to login page</p>
-          <button className="fp-next-btn" onClick={() => navigate('/')}>Login</button>
+          <button className="fp-next-btn" onClick={() => router.push('/')}>Login</button>
         </div>
       </div>
     );

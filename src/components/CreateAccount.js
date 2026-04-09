@@ -1,9 +1,10 @@
+'use client';
+
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import Link from 'next/link';
 import './CreateAccount.css';
 
 function CreateAccount() {
-  const navigate = useNavigate();
   const [form, setForm] = useState({
     firstName: '',
     lastName: '',
@@ -55,11 +56,11 @@ function CreateAccount() {
       </div>
 
       <div className="ca-footer">
-        <a href="/" className="ca-footer-link" onClick={(e) => { e.preventDefault(); navigate('/'); }}>
+        <Link href="/" className="ca-footer-link">
           Already have an account?
-        </a>
+        </Link>
         <span className="ca-footer-divider">|</span>
-        <a href="/forgot-password" className="ca-footer-link" onClick={(e) => { e.preventDefault(); navigate('/forgot-password'); }}>Forgot Password</a>
+        <Link href="/forgot-password" className="ca-footer-link">Forgot Password</Link>
       </div>
     </div>
   );

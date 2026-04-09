@@ -1,9 +1,12 @@
+'use client';
+
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import './Login.css';
 
 function Login() {
-  const navigate = useNavigate();
+  const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [toggled, setToggled] = useState(false);
@@ -13,7 +16,7 @@ function Login() {
     if (toggled) return;
     setToggled(true);
     setTimeout(() => setFadingOut(true), 450);
-    setTimeout(() => navigate('/home'), 950);
+    setTimeout(() => router.push('/home'), 950);
   };
 
   return (
@@ -48,9 +51,9 @@ function Login() {
         </form>
 
         <div className="login-footer">
-          <a href="/create-account" className="footer-link" onClick={(e) => { e.preventDefault(); navigate('/create-account'); }}>Create New Account</a>
+          <Link href="/create-account" className="footer-link">Create New Account</Link>
           <span className="footer-divider">|</span>
-          <a href="/forgot-password" className="footer-link" onClick={(e) => { e.preventDefault(); navigate('/forgot-password'); }}>Forgot Password</a>
+          <Link href="/forgot-password" className="footer-link">Forgot Password</Link>
         </div>
       </div>
     </div>

@@ -1,11 +1,13 @@
+'use client';
+
 import { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 import Sidebar from './Sidebar';
 import { NotesProvider } from '../context/NotesContext';
 import './Layout.css';
 
 function Layout({ children }) {
-  const navigate = useNavigate();
+  const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [avatarMenuOpen, setAvatarMenuOpen] = useState(false);
   const avatarRef = useRef(null);
@@ -27,13 +29,13 @@ function Layout({ children }) {
         <button className="nav-hamburger" onClick={() => setSidebarOpen(o => !o)}>
           <span /><span /><span />
         </button>
-        <span className="nav-title" onClick={() => navigate('/home')}>study/&lt;mode&gt;</span>
+        <span className="nav-title" onClick={() => router.push('/home')}>study/&lt;mode&gt;</span>
         <div className="nav-avatar-wrap" ref={avatarRef}>
           <div className="nav-avatar" onClick={() => setAvatarMenuOpen(o => !o)} />
           {avatarMenuOpen && (
             <div className="avatar-dropdown">
               <button className="avatar-dropdown-item" onClick={() => { setAvatarMenuOpen(false); }}>Profile</button>
-              <button className="avatar-dropdown-item avatar-dropdown-item--danger" onClick={() => { setAvatarMenuOpen(false); navigate('/'); }}>Logout</button>
+              <button className="avatar-dropdown-item avatar-dropdown-item--danger" onClick={() => { setAvatarMenuOpen(false); router.push('/'); }}>Logout</button>
             </div>
           )}
         </div>

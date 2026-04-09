@@ -1,11 +1,13 @@
+'use client';
+
 import { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useRouter, usePathname } from 'next/navigation';
 import { useNotes } from '../context/NotesContext';
 import './Sidebar.css';
 
 function Sidebar({ open, onClose }) {
-  const navigate = useNavigate();
-  const { pathname } = useLocation();
+  const router = useRouter();
+  const pathname = usePathname();
   const { folders, addFile, renameFile, deleteFile, addFolder, renameFolder, deleteFolder } = useNotes();
 
   const [expanded, setExpanded] = useState({ 1: true });
@@ -74,7 +76,7 @@ function Sidebar({ open, onClose }) {
 
       {pathname !== '/home' && (
         <div className="sidebar-nav">
-          <button className="sidebar-nav-btn" onClick={() => navigate('/home')}>🏠 Home</button>
+          <button className="sidebar-nav-btn" onClick={() => router.push('/home')}>🏠 Home</button>
         </div>
       )}
 
@@ -108,7 +110,7 @@ function Sidebar({ open, onClose }) {
               <div className="file-list">
                 {folder.files.map((file, i) => (
                   <div key={i} className="file-item"
-                    onClick={() => navigate('/notes', { state: { folder: folder.name, file, folderId: folder.id, fileIndex: i } })}>
+                    onClick={() => router.push(`/notes?folderId=${folder.id}&fileIndex=${i}`)}>
                     <span className="file-name">{file}</span>
                     <div className="dots-wrap">
                       <button className="dots-btn" onClick={(e) => toggleMenu(e, 'file', folder.id, i)}>⋯</button>

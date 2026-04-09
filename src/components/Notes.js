@@ -1,17 +1,37 @@
-import { useRef, useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+'use client';
+
+import { useRef, useState, useEffect, useMemo } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { useNotes } from '../context/NotesContext';
 import './Notes.css';
 
 function Notes() {
-  const { state } = useLocation();
-  const folder    = state?.folder    || 'Folder';
-  const file      = state?.file      || 'Untitled';
-  const folderId  = state?.folderId  ?? null;
-  const fileIndex = state?.fileIndex ?? null;
-  const today     = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+  const searchParams = useSearchParams();
+  const folderIdRaw = searchParams.get('folderId');
+  const fileIndexRaw = searchParams.get('fileIndex');
+  const parsedFolderId = folderIdRaw != null && folderIdRaw !== '' ? Number(folderIdRaw) : NaN;
+  const parsedFileIndex = fileIndexRaw != null && fileIndexRaw !== '' ? Number(fileIndexRaw) : NaN;
 
-  const { renameFile } = useNotes();
+  const { folders, renameFile } = useNotes();
+
+  const { folder, file, folderId, fileIndex } = useMemo(() => {
+    if (Number.isNaN(parsedFolderId) || Number.isNaN(parsedFileIndex)) {
+      return { folder: 'Folder', file: 'Untitled', folderId: null, fileIndex: null };
+    }
+    const f = folders.find((x) => x.id === parsedFolderId);
+    if (!f || parsedFileIndex < 0 || parsedFileIndex >= f.files.length) {
+      return { folder: 'Folder', file: 'Untitled', folderId: null, fileIndex: null };
+    }
+    return {
+      folder: f.name,
+      file: f.files[parsedFileIndex],
+      folderId: parsedFolderId,
+      fileIndex: parsedFileIndex,
+    };
+  }, [folders, parsedFolderId, parsedFileIndex]);
+
+  const today = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+
   const editorRef = useRef(null);
   const [currentName, setCurrentName] = useState(file);
 

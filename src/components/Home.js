@@ -1,3 +1,5 @@
+'use client';
+
 import TimerModal from './TimerModal';
 import { useTimer } from '../context/TimerContext';
 import './Home.css';
