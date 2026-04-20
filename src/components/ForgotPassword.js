@@ -1,59 +1,50 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { createClient } from '../utils/supabase/client';
 import './ForgotPassword.css';
 
 function ForgotPassword() {
   const router = useRouter();
   const [step, setStep] = useState('emailEntry');
   const [email, setEmail] = useState('');
-  const [digits, setDigits] = useState(['', '', '', '', '', '']);
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const boxRefs = useRef([]);
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const handleDigitChange = (index, value) => {
-    if (!/^\d*$/.test(value)) return;
-    const updated = [...digits];
-    updated[index] = value.slice(-1);
-    setDigits(updated);
-    if (value && index < 5) boxRefs.current[index + 1].focus();
-  };
+  useEffect(() => {
+    const supabase = createClient();
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
+      if (event === 'PASSWORD_RECOVERY') setStep('resetPassword');
+    });
+    return () => subscription.unsubscribe();
+  }, []);
 
-  const handleDigitKeyDown = (index, e) => {
-    if (e.key === 'Backspace' && !digits[index] && index > 0) {
-      boxRefs.current[index - 1].focus();
-    }
-  };
-
-  const handleDigitPaste = (e) => {
-    const pasted = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, 6);
-    if (!pasted) return;
+  const handleEmailSubmit = async (e) => {
     e.preventDefault();
-    const updated = [...digits];
-    pasted.split('').forEach((char, i) => { updated[i] = char; });
-    setDigits(updated);
-    const nextEmpty = Math.min(pasted.length, 5);
-    boxRefs.current[nextEmpty].focus();
+    setError('');
+    setLoading(true);
+    const supabase = createClient();
+    const { error: authError } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/forgot-password`,
+    });
+    setLoading(false);
+    if (authError) { setError(authError.message); return; }
+    setStep('linkSent');
   };
 
-  const handleEmailSubmit = (e) => {
+  const handleResetSubmit = async (e) => {
     e.preventDefault();
-    // TODO: send code to email via Firebase
-    setStep('enterCode');
-  };
-
-  const handleCodeSubmit = (e) => {
-    e.preventDefault();
-    // TODO: verify code via Firebase
-    setStep('resetPassword');
-  };
-
-  const handleResetSubmit = (e) => {
-    e.preventDefault();
-    // TODO: update password via Firebase
+    if (newPassword !== confirmPassword) { setError('Passwords do not match'); return; }
+    setError('');
+    setLoading(true);
+    const supabase = createClient();
+    const { error: authError } = await supabase.auth.updateUser({ password: newPassword });
+    setLoading(false);
+    if (authError) { setError(authError.message); return; }
     setStep('confirmation');
   };
 
@@ -66,7 +57,7 @@ function ForgotPassword() {
         <div className="fp-content">
           <p className="fp-heading">Forgot Your Password ?</p>
           <p className="fp-subtext">
-            Enter your email address and we&apos;ll send you a verification code.
+            Enter your email address and we&apos;ll send you a reset link.
           </p>
 
           <form className="fp-email-form" onSubmit={handleEmailSubmit}>
@@ -78,8 +69,11 @@ function ForgotPassword() {
               onChange={(e) => setEmail(e.target.value)}
               required
             />
+            {error && <p className="fp-error">{error}</p>}
             <div className="fp-next-row">
-              <button type="submit" className="fp-next-btn">Next</button>
+              <button type="submit" className="fp-next-btn" disabled={loading}>
+                {loading ? 'Sending…' : 'Next'}
+              </button>
             </div>
           </form>
 
@@ -102,8 +96,8 @@ function ForgotPassword() {
     );
   }
 
-  // ── Step 2: Enter Code ──
-  if (step === 'enterCode') {
+  // ── Step 2: Link Sent ──
+  if (step === 'linkSent') {
     return (
       <div className="fp-page">
         <h1 className="fp-title">study/&lt;mode&gt;</h1>
@@ -111,35 +105,14 @@ function ForgotPassword() {
         <div className="fp-content">
           <p className="fp-heading">Check Your Email</p>
           <p className="fp-subtext">
-            We sent a verification code to{' '}
-            <span className="fp-highlight">{email}</span>. Enter it below.
+            We sent a password reset link to{' '}
+            <span className="fp-highlight">{email}</span>. Click the link to
+            continue.
           </p>
 
-          <form className="fp-email-form" onSubmit={handleCodeSubmit}>
-            <div className="fp-code-boxes">
-              {digits.map((digit, i) => (
-                <input
-                  key={i}
-                  className="fp-code-box"
-                  type="text"
-                  inputMode="numeric"
-                  maxLength={1}
-                  value={digit}
-                  ref={(el) => (boxRefs.current[i] = el)}
-                  onChange={(e) => handleDigitChange(i, e.target.value)}
-                  onKeyDown={(e) => handleDigitKeyDown(i, e)}
-                  onPaste={handleDigitPaste}
-                />
-              ))}
-            </div>
-            <div className="fp-next-row">
-              <button type="submit" className="fp-next-btn" disabled={digits.join('').length < 6}>Next</button>
-            </div>
-          </form>
-
           <p className="fp-help">
-            Didn&apos;t get a code?{' '}
-            <span className="fp-highlight fp-resend" onClick={() => console.log('Resend code')}>
+            Didn&apos;t get it?{' '}
+            <span className="fp-highlight fp-resend" onClick={handleEmailSubmit}>
               Resend
             </span>
           </p>
@@ -176,8 +149,11 @@ function ForgotPassword() {
                 required
               />
             </div>
+            {error && <p className="fp-error">{error}</p>}
             <div className="fp-next-row">
-              <button type="submit" className="fp-next-btn">Next</button>
+              <button type="submit" className="fp-next-btn" disabled={loading}>
+                {loading ? 'Saving…' : 'Next'}
+              </button>
             </div>
           </form>
         </div>

@@ -2,9 +2,12 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { createClient } from '../utils/supabase/client';
 import './CreateAccount.css';
 
 function CreateAccount() {
+  const router = useRouter();
   const [form, setForm] = useState({
     firstName: '',
     lastName: '',
@@ -12,14 +15,33 @@ function CreateAccount() {
     password: '',
     confirmPassword: '',
   });
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Account created:', form);
+    if (form.password !== form.confirmPassword) { setError('Passwords do not match'); return; }
+    setError('');
+    setLoading(true);
+    const supabase = createClient();
+    const { data, error: authError } = await supabase.auth.signUp({
+      email: form.email,
+      password: form.password,
+      options: {
+        data: { first_name: form.firstName, last_name: form.lastName },
+      },
+    });
+    setLoading(false);
+    if (authError) { setError(authError.message); return; }
+    if (data.user?.identities?.length === 0) {
+      setError('An account with this email already exists. Try logging in instead.');
+      return;
+    }
+    router.push(`/verify-email?email=${encodeURIComponent(form.email)}`);
   };
 
   return (
@@ -49,8 +71,12 @@ function CreateAccount() {
             <input className="ca-input" type="password" name="confirmPassword" value={form.confirmPassword} onChange={handleChange} required />
           </div>
 
+          {error && <p className="ca-error">{error}</p>}
+
           <div className="ca-next-row">
-            <button type="submit" className="ca-next-btn">Next</button>
+            <button type="submit" className="ca-next-btn" disabled={loading}>
+              {loading ? 'Creating…' : 'Next'}
+            </button>
           </div>
         </form>
       </div>

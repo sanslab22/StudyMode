@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { createClient } from '../utils/supabase/client';
 import './Login.css';
 
 function Login() {
@@ -11,9 +12,22 @@ function Login() {
   const [password, setPassword] = useState('');
   const [toggled, setToggled] = useState(false);
   const [fadingOut, setFadingOut] = useState(false);
+  const [error, setError] = useState('');
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     if (toggled) return;
+    setError('');
+    const supabase = createClient();
+    const { error: authError } = await supabase.auth.signInWithPassword({ email, password });
+    if (authError) {
+      const { error: resendError } = await supabase.auth.resend({ type: 'signup', email });
+      if (!resendError) {
+        router.push(`/verify-email?email=${encodeURIComponent(email)}&unverified=true`);
+        return;
+      }
+      setError(authError.message);
+      return;
+    }
     setToggled(true);
     setTimeout(() => setFadingOut(true), 450);
     setTimeout(() => router.push('/home'), 950);
@@ -39,6 +53,8 @@ function Login() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
+
+          {error && <p className="login-error">{error}</p>}
 
           <button
             type="button"
